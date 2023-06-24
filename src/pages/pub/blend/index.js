@@ -25,7 +25,7 @@ const ThreeScene = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     containerRef.current.appendChild(renderer.domElement);
-    renderer.setClearColor(0xa3a3a3); //đặt màu background
+    renderer.setClearColor(0xc4ec74); //đặt màu background
 
     // Tạo các đối tượng geometry
     const grid = new THREE.GridHelper(30, 30);
@@ -45,6 +45,27 @@ const ThreeScene = () => {
       "/blenderfile/doggo.glb",
       function (gltf) {
         const model = gltf.scene;
+        scene.add(model);
+        mixer = new THREE.AnimationMixer(model);
+        const clips = gltf.animations;
+
+        // Play all animations at the same time
+        clips.forEach(function (clip) {
+          const action = mixer.clipAction(clip);
+          action.play();
+        });
+      },
+      undefined,
+      function (error) {
+        console.error(error);
+      }
+    );
+
+    assetLoader.load(
+      "/blenderfile/SHIP.glb",
+      function (gltf) {
+        const model = gltf.scene;
+        model.position.set(0, 20, 0);
         scene.add(model);
         mixer = new THREE.AnimationMixer(model);
         const clips = gltf.animations;
